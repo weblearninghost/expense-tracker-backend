@@ -1,0 +1,61 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Build / output
+dist/
+build/
+
+# Coverage reports
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor folders
+.vscode/
+.idea/
+
+# Temporary files
+tmp/
+temp/
+
+# Optional npm cache
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Debug files
+*.swp
+
+# MongoDB local files (if any)
+data/
+*.mongodb
+
+# Package lock (optional - usually you SHOULD commit this)
+# package-lock.json
+
+# Docker (if you add later)
+docker-compose.override.yml
+
+# Misc
+*.tgz
