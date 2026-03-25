@@ -5,7 +5,6 @@ const MONGO_CONNECTION_STRING =
 
 async function connectDatabase() {
   try {
-    //console.log(`MONGO URI:${MONGO_CONNECTION_STRING}`);
     const mongodbConnection = await mongoose.connect(MONGO_CONNECTION_STRING);
     console.log(
       `Database connection successful! ${mongodbConnection.connection.host} `
