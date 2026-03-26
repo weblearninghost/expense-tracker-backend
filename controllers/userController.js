@@ -99,4 +99,23 @@ const loginUser = async (req, res) => {
     });
   }
 };
-module.exports = { registerUser, loginUser };
+
+const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    res.status(200).json({
+      message: 'User Profile API Response.',
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Server error.',
+      error: error.message,
+    });
+  }
+};
+module.exports = { registerUser, loginUser, getUserProfile };
