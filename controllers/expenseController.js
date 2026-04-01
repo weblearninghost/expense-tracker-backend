@@ -1,3 +1,4 @@
+const Expense = require('../models/Expense');
 const expense = require('../models/Expense');
 const addExpense = async (req, res) => {
   try {
@@ -42,4 +43,29 @@ const addExpense = async (req, res) => {
     });
   }
 };
-module.exports = { addExpense };
+
+const getAllExpenses = async (req, res) => {
+  try {
+    const expenses = await Expense.find({ user: req.user._id }).sort({
+      createdAt: -1,
+    });
+    if (!expense?.length) {
+      console.log('Expenses not found.');
+      res.status(404).json({
+        message: 'Expenses not found.',
+      });
+    }
+
+    return res.status(200).json({
+      message: 'Expenses fetched successfully.',
+      expenses,
+    });
+  } catch (error) {
+    console.log('Sever Error:', error);
+    res.status(500).json({
+      message: 'Server error.',
+      error: error.message,
+    });
+  }
+};
+module.exports = { addExpense, getAllExpenses };
