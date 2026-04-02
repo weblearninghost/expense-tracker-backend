@@ -68,4 +68,37 @@ const getAllExpenses = async (req, res) => {
     });
   }
 };
-module.exports = { addExpense, getAllExpenses };
+
+const getExpenseById = async (req, res) => {
+  try {
+    if (!req?.params?.id) {
+      console.log('Expense id is required.');
+      return res.status(400).json({
+        message: 'Expense id is required.',
+      });
+    }
+    //fetch single expense
+    const expense = await Expense.findById(req.params.id);
+
+    if (!expense) {
+      console.log('Expense not found');
+      return res.status(404).json({
+        message: 'Expense not found.',
+      });
+    }
+
+    //return expense
+    console.log(`Expense fetched successfully (id:${expense._id})`);
+    return res.status(200).json({
+      message: 'Expense fetched successfully.',
+      expense,
+    });
+  } catch (error) {
+    console.log('Server error:', error);
+    res.status(500).json({
+      message: 'Server error.',
+      error: error.message,
+    });
+  }
+};
+module.exports = { addExpense, getAllExpenses, getExpenseById };
