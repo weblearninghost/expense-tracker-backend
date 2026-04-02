@@ -101,4 +101,61 @@ const getExpenseById = async (req, res) => {
     });
   }
 };
-module.exports = { addExpense, getAllExpenses, getExpenseById };
+const updateExpense = async (req, res) => {
+  try {
+    if (!req?.params?.id) {
+      console.log('Expense id is required.');
+      return res.status(400).json({
+        message: 'Expense id is required.',
+      });
+    }
+
+    //find expense
+    const existingExpense = await Expense.findById(req.params.id);
+    if (!existingExpense) {
+      console.log('Expense not found.');
+      return res.status(404).json({
+        message: 'Expense not found.',
+      });
+    }
+
+    //validate user with expense
+    if (!existingExpense.user == req.user._id) {
+      console.log('User is not authorized to update this record.');
+      return res.status(400).json({
+        message: 'User is not authorized to update this record.',
+      });
+    }
+
+    //check validity of amount and date
+    const { amount, date } = req.body;
+    const parsedDate = new Date(date);
+    if (isNaN(amount) || isNaN(parsedDate.getTime())) {
+      console.log('Enter valid amount and date');
+      return res.status(400).json({
+        message: 'Enter valid amount and date',
+      });
+    }
+
+    //update expense
+    const updatedExpense = await Expense.updateOne(
+      { _id: req.params.id },
+      {
+        amount,
+        date,
+      }
+    );
+    console.log(`Expense updated successfully:${updatedExpense}`);
+    return res.status(200).json({
+      message: `Expense updated successfully.`,
+      data: updatedExpense,
+    });
+  } catch (error) {
+    console.log('Server error:', error);
+    return res.status(500).json({
+      message: 'Server error.',
+      error: error.message,
+    });
+  }
+};
+module.exports = { addExpense, getAllExpenses, getExpenseById, updateExpense };
