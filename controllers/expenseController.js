@@ -128,7 +128,7 @@ const updateExpense = async (req, res) => {
     }
 
     //check validity of amount and date
-    const { amount, date } = req.body;
+    const { amount, date, category, description } = req.body;
     const parsedDate = new Date(date);
     if (isNaN(amount) || isNaN(parsedDate.getTime())) {
       console.log('Enter valid amount and date');
@@ -136,19 +136,18 @@ const updateExpense = async (req, res) => {
         message: 'Enter valid amount and date',
       });
     }
+    if (amount) existingExpense.amount = amount;
+    if (category) existingExpense.category = category;
+    if (date) existingExpense.date = date;
+    if (description) existingExpense.description = description;
+    const data = await existingExpense.save();
 
     //update expense
-    const updatedExpense = await Expense.updateOne(
-      { _id: req.params.id },
-      {
-        amount,
-        date,
-      }
-    );
-    console.log(`Expense updated successfully:${updatedExpense}`);
+
+    console.log(`Expense updated successfully:${existingExpense._id}`);
     return res.status(200).json({
       message: `Expense updated successfully.`,
-      data: updatedExpense,
+      expense: data,
     });
   } catch (error) {
     console.log('Server error:', error);
