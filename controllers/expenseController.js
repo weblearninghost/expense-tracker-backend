@@ -157,4 +157,52 @@ const updateExpense = async (req, res) => {
     });
   }
 };
-module.exports = { addExpense, getAllExpenses, getExpenseById, updateExpense };
+const deleteExpense = async (req, res) => {
+  try {
+    //validate expense id
+    if (!req?.params?.id) {
+      console.log('Expense Id is required.');
+      return res.status(400).json({
+        message: 'Expense Id is required.',
+      });
+    }
+
+    //get expense by Id
+    const existingExpense = await Expense.findById(req.params.id);
+    if (!existingExpense) {
+      console.log('Expense not found.');
+      return res.status(404).json({
+        message: 'Expense not found.',
+      });
+    }
+
+    //validate user
+    if (existingExpense.user != req.user._id) {
+      console.log('User is not authorized to delete this expense.');
+      return res.status(400).json({
+        message: 'User is not authorized to delete this expense.',
+      });
+    }
+
+    //delete expense
+    const data = await existingExpense.deleteOne();
+    console.log({ data });
+    return res.status(200).json({
+      message: 'Expense deleted successfully.',
+      data,
+    });
+  } catch (error) {
+    console.log('Server error:', error);
+    return res.status(500).json({
+      message: 'Server error.',
+      error: error.message,
+    });
+  }
+};
+module.exports = {
+  addExpense,
+  getAllExpenses,
+  getExpenseById,
+  updateExpense,
+  deleteExpense,
+};
